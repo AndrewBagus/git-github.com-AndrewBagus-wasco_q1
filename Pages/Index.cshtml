@@ -1,0 +1,55 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<h1>Fibonacci</h1>
+<div class="row" style="margin-top:30px">
+    <form class="form-horizontal" id="count_form">
+        @Html.AntiForgeryToken()
+        <div class="control-group col-md-7">
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label" for="n_number">N Number</label>
+                <div class="col-md-9">
+                    <input type="text" id="n_number" class="form-control cannot-null" required="" placeholder="N Number" name="n_number" value="">
+                </div>
+            </div>       
+        </div>
+        <div class="control-group col-md-7">
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label">Result : </label>
+                <label class="col-md-2 col-form-label" id="result"></label>
+            </div>       
+        </div>
+        <div class="control-group col-md-7" style="margin-top:0px">
+            <button type="button" class="btn btn-primary" id="btn_count"><i class="fa fa-key"></i> Count</button>
+        </div>
+    </form>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script language="javascript">
+        $("#btn_count").click(function ()
+        {
+            send_count();
+        });
+
+        function send_count() {
+            var form = $('#count_form').get(0);
+            var form_data = new FormData(form);
+            $.ajax({
+                url: '/index',
+                type: 'post',
+                dataType: 'json',
+                data: form_data,
+                contentType: false,
+                processData: false
+            }).done(function (result) {
+                $("#result").html(result.data);
+                
+            });
+        }
+
+    </script>
+}
